@@ -1,0 +1,49 @@
+# Dependencies
+node_modules/
+
+# Build
+dist/
+build/
+.vite/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local tooling / agent workspace
+.agent/
+.agents/
+.antigravity/
+.claude/
+.cursor/
+.windsurf/
+
+# Local notes / scratch
+.local/
+scratch/
+notes-private/
+prompts-private/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Generated previews / exports
+exports/
+tmp/
+
+# Coverage
+coverage/
