@@ -6,6 +6,7 @@ import { buildShopifyCartPayload } from '@/features/shopify/shopifyAdapter';
 import { shopifyService } from '@/features/shopify/shopifyService';
 import { ShopifyCartPayload } from '@/features/shopify/types';
 import { ShopifyCartModal } from '@/features/shopify/components/ShopifyCartModal';
+import { PDFDownloadButton } from '@/features/pdf/components/PDFDownloadButton';
 import { Minus, Plus, ShieldCheck, ShoppingCart, Loader2, Tag, ChevronRight } from 'lucide-react';
 
 export const SpecSummary: React.FC = () => {
@@ -223,6 +224,9 @@ export const SpecSummary: React.FC = () => {
           </>
         )}
       </button>
+
+      {/* Dedicated Production PDF Download Button */}
+      <PDFDownloadButton />
 
       {/* Synchronized Notice */}
       <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-500 pt-1">
