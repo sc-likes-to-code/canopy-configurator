@@ -1,13 +1,9 @@
-/**
- * Type contracts for future dynamic pricing API integration.
- */
-
 export interface PricingRequestPayload {
   productId: string;
   frameFinishId: string;
   canopyColorId: string;
   quantity: number;
-  configuredPanelsCount?: number;
+  panelDesigns?: Record<string, { elements: Array<{ type: 'text' | 'image' }> }>;
 }
 
 export interface PricingBreakdownItem {
