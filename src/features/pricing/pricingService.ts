@@ -78,7 +78,7 @@ export class MockPricingService implements IPricingService {
     }
 
     return {
-      currency: '₹',
+      currency: 'Rs. ',
       unitPrice,
       totalPrice,
       breakdown,

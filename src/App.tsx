@@ -11,18 +11,19 @@ export const App: React.FC = () => {
   const [viewMode, setViewMode] = useState<ViewMode>('split');
 
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden bg-slate-950 font-sans text-slate-100">
+    <div className="flex flex-col h-full w-full min-h-0 overflow-hidden bg-slate-950 font-sans text-slate-100">
       {/* Top Application Header */}
       <Header />
 
       {/* Main Studio Workspace */}
-      <main className="flex-1 flex flex-col md:flex-row overflow-hidden relative">
+      <main className="flex-1 flex flex-col md:flex-row overflow-hidden relative min-h-0 min-w-0">
         {/* Central Workspace: 2D Artboard + 3D Viewport */}
-        <div className="flex-1 flex flex-col overflow-hidden relative">
+        <div className="flex-1 flex flex-col overflow-hidden relative min-h-0 min-w-0">
           {/* Workspace Mode Switcher Floating Bar */}
           <div className="absolute top-3 left-3 z-20 flex items-center bg-slate-900/90 p-1 rounded-xl border border-slate-700/80 backdrop-blur-md shadow-xl text-xs select-none">
             <button
               onClick={() => setViewMode('split')}
+              aria-label="Switch to Split View"
               className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-medium transition-all ${
                 viewMode === 'split' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
               }`}
@@ -32,6 +33,7 @@ export const App: React.FC = () => {
             </button>
             <button
               onClick={() => setViewMode('3d')}
+              aria-label="Switch to 3D View"
               className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-medium transition-all ${
                 viewMode === '3d' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
               }`}
@@ -41,6 +43,7 @@ export const App: React.FC = () => {
             </button>
             <button
               onClick={() => setViewMode('2d')}
+              aria-label="Switch to 2D Canvas"
               className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-medium transition-all ${
                 viewMode === '2d' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
               }`}
@@ -51,11 +54,11 @@ export const App: React.FC = () => {
           </div>
 
           {/* Canvas Workspaces Render */}
-          <div className="flex-1 flex flex-col lg:flex-row h-full overflow-hidden">
+          <div className="flex-1 flex flex-col lg:flex-row h-full overflow-hidden min-h-0 min-w-0">
             {/* 2D Design Artboard Editor */}
             {(viewMode === 'split' || viewMode === '2d') && (
               <div
-                className={`relative bg-slate-900/40 border-r border-slate-800/80 flex flex-col items-center justify-center p-2 overflow-hidden ${
+                className={`relative bg-slate-900/40 border-r border-slate-800/80 flex flex-col items-center justify-center p-2 overflow-hidden min-h-0 ${
                   viewMode === 'split' ? 'w-full lg:w-1/2 h-1/2 lg:h-full' : 'w-full h-full'
                 }`}
               >
@@ -66,7 +69,7 @@ export const App: React.FC = () => {
             {/* 3D R3F Viewport */}
             {(viewMode === 'split' || viewMode === '3d') && (
               <div
-                className={`relative overflow-hidden ${
+                className={`relative overflow-hidden min-h-0 ${
                   viewMode === 'split' ? 'w-full lg:w-1/2 h-1/2 lg:h-full' : 'w-full h-full'
                 }`}
               >
@@ -84,3 +87,4 @@ export const App: React.FC = () => {
 };
 
 export default App;
+

@@ -5,16 +5,13 @@ export class MockShopifyService implements IShopifyService {
     // Simulate API network latency (100ms)
     await new Promise((resolve) => setTimeout(resolve, 100));
 
-    const totalAmount = cartItems.reduce((acc, item) => {
-      const priceAttr = item.customAttributes.find((a) => a.key === 'Subtotal Price');
-      const val = priceAttr ? parseFloat(priceAttr.value.replace(/[^0-9.]/g, '')) : 0;
-      return acc + (val || 0);
-    }, 0);
+    const subtotalAttr = cartItems[0]?.customAttributes.find((a) => a.key === 'Subtotal Price');
+    const subtotalPrice = subtotalAttr ? subtotalAttr.value : 'Rs. 0';
 
     const payload: ShopifyCartPayload = {
       lineItems: cartItems,
-      subtotalPrice: `₹${totalAmount.toLocaleString('en-IN')}`,
-      currency: '₹',
+      subtotalPrice,
+      currency: 'Rs. ',
       createdAt: new Date().toISOString(),
     };
 

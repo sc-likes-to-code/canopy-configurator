@@ -22,14 +22,17 @@ export const Sidebar: React.FC = () => {
 
   return (
     <aside
-      className={`relative flex flex-col bg-slate-900 border-l border-slate-800 transition-all duration-300 z-10 shrink-0 ${
-        isCollapsed ? 'w-12' : 'w-full md:w-80 lg:w-96'
+      className={`relative flex flex-col bg-slate-900 border-t md:border-t-0 md:border-l border-slate-800 transition-all duration-300 z-10 shrink-0 ${
+        isCollapsed
+          ? 'h-12 md:h-full w-full md:w-12'
+          : 'w-full md:w-80 lg:w-96 h-80 md:h-full'
       }`}
     >
-      {/* Collapse/Expand Toggle Button */}
+      {/* Collapse/Expand Toggle Button (Desktop) */}
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className="hidden md:flex absolute -left-3.5 top-6 z-20 h-7 w-7 rounded-full bg-slate-800 border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-700 items-center justify-center shadow-lg transition-all"
+        aria-label={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
+        className="hidden md:flex absolute -left-3.5 top-6 z-20 h-7 w-7 rounded-full bg-slate-800 border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-700 items-center justify-center shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
         title={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
       >
         {isCollapsed ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
@@ -37,7 +40,7 @@ export const Sidebar: React.FC = () => {
 
       {isCollapsed ? (
         /* Collapsed Icon Bar */
-        <div className="flex flex-col items-center gap-4 py-6 text-slate-400">
+        <div className="flex flex-row md:flex-col items-center justify-around md:justify-start gap-2 md:gap-4 px-4 py-2 md:py-6 text-slate-400">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -48,6 +51,7 @@ export const Sidebar: React.FC = () => {
                   setActiveTab(tab.id);
                   setIsCollapsed(false);
                 }}
+                aria-label={tab.label}
                 className={`p-2 rounded-lg transition-all ${
                   isActive ? 'bg-blue-600 text-white' : 'hover:bg-slate-800 hover:text-white'
                 }`}
@@ -71,7 +75,8 @@ export const Sidebar: React.FC = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-1.5 px-3 py-2.5 rounded-t-lg text-xs font-semibold transition-all border-t border-x whitespace-nowrap ${
+                  aria-label={tab.label}
+                  className={`flex items-center gap-1.5 px-3 py-2.5 rounded-t-lg text-xs font-semibold transition-all border-t border-x whitespace-nowrap focus:outline-none focus:ring-1 focus:ring-blue-500 ${
                     isActive
                       ? 'bg-slate-900 text-blue-400 border-slate-800 border-b-slate-900 -mb-px'
                       : 'text-slate-400 border-transparent hover:text-slate-200 hover:bg-slate-800/40'
@@ -85,7 +90,7 @@ export const Sidebar: React.FC = () => {
           </div>
 
           {/* Active Tab Panel Container */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-5">
+          <div className="flex-1 overflow-y-auto p-4 space-y-5 min-h-0">
             {activeTab === 'branding' && (
               <div className="space-y-5">
                 <PanelSelector />
@@ -99,7 +104,7 @@ export const Sidebar: React.FC = () => {
           </div>
 
           {/* Bottom Sidebar Action Footer */}
-          <div className="p-4 border-t border-slate-800/80 bg-slate-950/60 flex items-center justify-between text-xs text-slate-400 select-none">
+          <div className="p-3 md:p-4 border-t border-slate-800/80 bg-slate-950/60 flex items-center justify-between text-xs text-slate-400 select-none shrink-0">
             <span className="text-[11px] font-medium text-slate-400">Canopy Studio 2D/3D</span>
             <span className="text-[11px] font-medium text-emerald-400 flex items-center gap-1">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
@@ -111,3 +116,4 @@ export const Sidebar: React.FC = () => {
     </aside>
   );
 };
+

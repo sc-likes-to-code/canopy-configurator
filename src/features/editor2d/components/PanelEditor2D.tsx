@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useRef, useState, useCallback, useLayoutEffect } from 'react';
 import { useConfiguratorStore } from '@/core/state/useConfiguratorStore';
 import { DesignElement } from '@/core/state/types';
 import { Move } from 'lucide-react';
@@ -13,8 +13,21 @@ export const PanelEditor2D: React.FC = () => {
 
   const containerRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
+  const [containerWidth, setContainerWidth] = useState<number>(400);
   const [draggingElementId, setDraggingElementId] = useState<string | null>(null);
   const [dragStart, setDragStart] = useState<{ mouseX: number; mouseY: number; initialX: number; initialY: number } | null>(null);
+
+  // Track container width for fluid font size rendering
+  useLayoutEffect(() => {
+    const updateSize = () => {
+      if (containerRef.current) {
+        setContainerWidth(containerRef.current.clientWidth);
+      }
+    };
+    updateSize();
+    window.addEventListener('resize', updateSize);
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
 
   const artboardWidth = activePanel.artboardWidth;
   const artboardHeight = activePanel.artboardHeight;
@@ -137,7 +150,7 @@ export const PanelEditor2D: React.FC = () => {
               {element.type === 'text' ? (
                 <div
                   style={{
-                    fontSize: `${(element.fontSize || 32) * (containerRef.current ? containerRef.current.clientWidth / artboardWidth : 0.5)}px`,
+                    fontSize: `${(element.fontSize || 32) * (containerWidth > 0 ? containerWidth / artboardWidth : 0.5)}px`,
                     color: element.fontColor || '#ffffff',
                     fontFamily: element.fontFamily || 'Inter',
                     fontWeight: element.fontWeight || 'bold',

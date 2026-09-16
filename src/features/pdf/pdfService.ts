@@ -369,7 +369,7 @@ export class PDFService implements IPDFService {
         doc.text(`• ${attr.key}:`, margin + 4, attrY);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(15, 23, 42);
-        doc.text(attr.value.replace(/₹/g, 'Rs. '), margin + 50, attrY);
+        doc.text(attr.value, margin + 50, attrY);
         doc.setFont('helvetica', 'normal');
         attrY += 5.5;
       });
