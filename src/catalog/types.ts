@@ -1,5 +1,7 @@
+import { CameraPreset } from '@/core/state/types';
+
 /**
- * Catalog data structures for product definitions, frame finishes, and fabric colors.
+ * Catalog data structures for product definitions, frame finishes, fabric colors, and configurable panels.
  */
 
 export interface TentDimensions {
@@ -24,10 +26,27 @@ export interface CanopyColorOption {
   materialName: string;
 }
 
+export interface PanelTextureTransform {
+  flipY?: boolean;
+  flipX?: boolean;
+}
+
 export interface PanelDefinition {
   id: string;
-  name: string;
+  label: string;
   description: string;
+  artboardWidth: number;
+  artboardHeight: number;
+  cameraPreset: CameraPreset;
+  // Texture UV placement bounding region on the GLB canopy texture map
+  uvRegion?: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  };
+  // Panel-specific texture orientation adjustments to match GLB UV mapping
+  textureTransform?: PanelTextureTransform;
 }
 
 export interface ProductDefinition {

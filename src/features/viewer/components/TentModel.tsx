@@ -1,6 +1,8 @@
-import React, { useLayoutEffect, useMemo } from 'react';
+import React, { useLayoutEffect, useMemo, useRef, useEffect } from 'react';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
+import { useConfiguratorStore } from '@/core/state/useConfiguratorStore';
+import { TextureGenerator } from '@/features/branding/services/TextureGenerator';
 
 interface TentModelProps {
   modelUrl: string;
@@ -16,6 +18,15 @@ export const TentModel: React.FC<TentModelProps> = ({
   scale = [1, 1, 1],
 }) => {
   const { scene } = useGLTF(modelUrl);
+  const activeProduct = useConfiguratorStore((s) => s.getActiveProduct());
+  const panelDesigns = useConfiguratorStore((s) => s.panelDesigns);
+
+  const prevTextureRef = useRef<THREE.CanvasTexture | null>(null);
+  const generatorRef = useRef<TextureGenerator | null>(null);
+
+  if (!generatorRef.current) {
+    generatorRef.current = new TextureGenerator(2048, 2048);
+  }
 
   // Clone scene so material modifications are isolated per instance
   const clonedScene = useMemo(() => {
@@ -28,7 +39,7 @@ export const TentModel: React.FC<TentModelProps> = ({
     return -box.min.y;
   }, [clonedScene]);
 
-  // Update materials when color props change
+  // Apply frame finish & inner fabric materials
   useLayoutEffect(() => {
     clonedScene.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
@@ -41,21 +52,12 @@ export const TentModel: React.FC<TentModelProps> = ({
         materials.forEach((mat) => {
           if (!mat) return;
           const pbrMat = mat as THREE.MeshStandardMaterial;
-
-          // Enable double-sided rendering so underside of canopy and interior frame are fully solid
           pbrMat.side = THREE.DoubleSide;
 
-          if (pbrMat.name === 'fabric_Mat' || pbrMat.name.toLowerCase().includes('fabric')) {
-            pbrMat.map = null;
+          if (pbrMat.name === 'Inner_fabric') {
             pbrMat.color.setStyle(canopyColorHex);
-            pbrMat.roughness = 0.45;
-            pbrMat.metalness = 0.02;
-            pbrMat.needsUpdate = true;
-          } else if (pbrMat.name === 'Inner_fabric') {
-            pbrMat.map = null;
-            pbrMat.color.setStyle(canopyColorHex);
-            pbrMat.roughness = 0.65;
-            pbrMat.metalness = 0.01;
+            pbrMat.roughness = 0.85;
+            pbrMat.metalness = 0.0;
             pbrMat.needsUpdate = true;
           } else if (pbrMat.name === 'Metal_mat' || pbrMat.name.toLowerCase().includes('metal')) {
             pbrMat.map = null;
@@ -69,6 +71,72 @@ export const TentModel: React.FC<TentModelProps> = ({
       }
     });
   }, [clonedScene, canopyColorHex, frameFinishHex]);
+
+  // Generate & update dynamic 2D canvas texture on outer canopy fabric_Mat
+  useEffect(() => {
+    let isCancelled = false;
+
+    async function updateCanopyTexture() {
+      if (!generatorRef.current) return;
+
+      await generatorRef.current.generateTextureCanvas(
+        panelDesigns,
+        canopyColorHex,
+        activeProduct
+      );
+
+      if (isCancelled) return;
+
+      // Dispose previous texture to prevent memory leaks
+      if (prevTextureRef.current) {
+        prevTextureRef.current.dispose();
+      }
+
+      const newTexture = generatorRef.current.createThreeTexture();
+
+      // Unified texture coordinate convention matching GLTF UV V-coordinate
+      newTexture.colorSpace = THREE.SRGBColorSpace;
+      newTexture.flipY = false;
+      newTexture.needsUpdate = true;
+
+      prevTextureRef.current = newTexture;
+
+      clonedScene.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          const mesh = child as THREE.Mesh;
+          const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+
+          materials.forEach((mat) => {
+            if (!mat) return;
+            const pbrMat = mat as THREE.MeshStandardMaterial;
+
+            if (pbrMat.name === 'fabric_Mat' || pbrMat.name.toLowerCase().includes('fabric')) {
+              pbrMat.map = newTexture;
+              pbrMat.color.setStyle('#ffffff'); // Pure white base so 2D colors display with 100% exact hex shade
+              pbrMat.roughness = 0.95; // Matte fabric finish to prevent PBR reflections from distorting 2D color shades
+              pbrMat.metalness = 0.0;
+              pbrMat.needsUpdate = true;
+            }
+          });
+        }
+      });
+    }
+
+    updateCanopyTexture();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [clonedScene, panelDesigns, canopyColorHex, activeProduct]);
+
+  // Clean up texture on unmount
+  useEffect(() => {
+    return () => {
+      if (prevTextureRef.current) {
+        prevTextureRef.current.dispose();
+      }
+    };
+  }, []);
 
   return (
     <group position={[0, yOffset * scale[1], 0]} scale={scale}>

@@ -1,4 +1,4 @@
-import { ProductDefinition, FrameFinishOption, CanopyColorOption } from './types';
+import { ProductDefinition, FrameFinishOption, CanopyColorOption, PanelDefinition } from './types';
 
 export const FRAME_FINISH_OPTIONS: FrameFinishOption[] = [
   {
@@ -33,6 +33,39 @@ export const CANOPY_COLOR_OPTIONS: CanopyColorOption[] = [
   { id: 'sunset-orange', name: 'Sunset Orange', colorHex: '#ea580c', materialName: 'fabric_Mat' },
 ];
 
+export const SHARED_PANELS: PanelDefinition[] = [
+  {
+    id: 'valance-front',
+    label: 'Front Valance',
+    description: 'Flat front perimeter overhang banner panel',
+    artboardWidth: 800,
+    artboardHeight: 200,
+    cameraPreset: 'front',
+    uvRegion: { x: 0.26, y: 0.74, width: 0.48, height: 0.22 },
+    textureTransform: { flipY: false, flipX: false },
+  },
+  {
+    id: 'roof-front',
+    label: 'Front Slope',
+    description: 'Primary front triangular canopy roof section',
+    artboardWidth: 800,
+    artboardHeight: 500,
+    cameraPreset: 'front',
+    uvRegion: { x: 0.26, y: 0.74, width: 0.48, height: 0.15 },
+    textureTransform: { flipY: false, flipX: false },
+  },
+  {
+    id: 'roof-side',
+    label: 'Side Slope',
+    description: 'Side canopy roof section',
+    artboardWidth: 800,
+    artboardHeight: 500,
+    cameraPreset: 'side',
+    uvRegion: { x: 0.65, y: 0.35, width: 0.23, height: 0.30 },
+    textureTransform: { flipY: false, flipX: false },
+  },
+];
+
 export const PRODUCTS: ProductDefinition[] = [
   {
     id: 'tent-5x5',
@@ -52,10 +85,7 @@ export const PRODUCTS: ProductDefinition[] = [
     defaultCanopyColorId: 'royal-blue',
     availableFrameFinishes: FRAME_FINISH_OPTIONS,
     availableCanopyColors: CANOPY_COLOR_OPTIONS,
-    panels: [
-      { id: 'roof', name: 'Canopy Roof', description: 'Primary canopy fabric coverage area' },
-      { id: 'valance', name: 'Perimeter Valance', description: 'Outer edge drop section' },
-    ],
+    panels: SHARED_PANELS,
   },
   {
     id: 'tent-6.5x6.5',
@@ -75,10 +105,7 @@ export const PRODUCTS: ProductDefinition[] = [
     defaultCanopyColorId: 'royal-blue',
     availableFrameFinishes: FRAME_FINISH_OPTIONS,
     availableCanopyColors: CANOPY_COLOR_OPTIONS,
-    panels: [
-      { id: 'roof', name: 'Canopy Roof', description: 'Primary canopy fabric coverage area' },
-      { id: 'valance', name: 'Perimeter Valance', description: 'Outer edge drop section' },
-    ],
+    panels: SHARED_PANELS,
   },
   {
     id: 'tent-8x8',
@@ -98,10 +125,7 @@ export const PRODUCTS: ProductDefinition[] = [
     defaultCanopyColorId: 'royal-blue',
     availableFrameFinishes: FRAME_FINISH_OPTIONS,
     availableCanopyColors: CANOPY_COLOR_OPTIONS,
-    panels: [
-      { id: 'roof', name: 'Canopy Roof', description: 'Primary canopy fabric coverage area' },
-      { id: 'valance', name: 'Perimeter Valance', description: 'Outer edge drop section' },
-    ],
+    panels: SHARED_PANELS,
   },
 ];
 

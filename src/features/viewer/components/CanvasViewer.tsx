@@ -88,9 +88,10 @@ export const CanvasViewer: React.FC = () => {
           <Canvas
             shadows
             camera={{ position: [6, 4.2, 7.5], fov: 42 }}
-            gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
+            gl={{ antialias: true, alpha: false, powerPreference: 'high-performance', toneMapping: THREE.NoToneMapping }}
             onCreated={({ gl }) => {
               gl.setClearColor('#fef3c7');
+              gl.toneMapping = THREE.NoToneMapping;
             }}
           >
             <CameraRig preset={cameraPreset} controlsRef={controlsRef} />
