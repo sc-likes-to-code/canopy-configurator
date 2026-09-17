@@ -145,7 +145,8 @@ export const TentModel: React.FC<TentModelProps> = ({
   );
 };
 
-// Preload models for instant product switching
-useGLTF.preload('/models/Tent_5_5.glb');
-useGLTF.preload('/models/Tent_6.5_6.5.glb');
-useGLTF.preload('/models/Tent_8_8.glb');
+// Preload compressed models with Draco decoder for instant product switching
+useGLTF.preload('/models/Tent_5_5.glb', 'https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
+useGLTF.preload('/models/Tent_6.5_6.5.glb', 'https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
+useGLTF.preload('/models/Tent_8_8.glb', 'https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
+
